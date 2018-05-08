@@ -1,7 +1,5 @@
 // Make sure we wait to attach our handlers until the DOM is fully loaded.
 $(function() {
-
-  $(document).ready(function(){
       $('.update-form').on('click',function (e) {
           e.preventDefault();
           //https://api.jquery.com/data/
@@ -13,6 +11,4 @@ $(function() {
               alert('Update of quote '+id+' successful.');
           });
       });
-  });
-
 });
