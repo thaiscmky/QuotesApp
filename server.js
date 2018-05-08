@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require("express");
 var bodyParser = require("body-parser");
 
@@ -7,6 +8,7 @@ var PORT = 3000;
 // Sets up the Express app to handle data parsing
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
 var exphbs = require("express-handlebars");
 
@@ -31,7 +33,53 @@ connection.connect(function(err) {
 });
 
 // Express and MySQL code
+app.get('/', getAllQuotes);
+app.get('/:id', viewQuote);
+app.post('/api/quotes', addQuote);
+app.put('/api/quotes/:id', updateQuote);
+app.delete('/api/quotes/:id', deleteQuote);
 
+function deleteQuote(req, res){
+    connection.query("DELETE FROM quotes WHERE ?", {id: req.params.id}, function(err, results){
+        if(err)
+            return res.status(500).send("Something went wrong editing your quote").end();
+        res.status(200).send("Edit successful").end();
+    });
+}
+
+function updateQuote(req, res){
+    connection.query("UPDATE quotes SET ? WHERE ?", {quote: req.params.quote, author: req.params.author}, {id: req.params.id},
+    function(err, results){
+        if(err)
+            return res.status(500).send("Something went wrong editing your quote").end();
+        res.status(200).send("Edit successful").end();
+    });
+}
+
+function addQuote(req, res){
+    connection.query("INSERT INTO quotes SET ?", {author: req.params.author, quote: req.params.quote},
+    function(err, results){
+        if(err)
+            return res.status(500).send("Something went wrong submitting your quote").end();
+        res.json(results.insertId);
+    });
+}
+function viewQuote(req, res){
+    connection.query("SELECT * FROM quotes WHERE id = ?", [req.params.id], function(err, results){
+        if(err)
+            return res.status(500).send('Something went wrong trying to get your quote.').end();
+        res.render('single-quote', results[0]);
+    });
+}
+
+
+function getAllQuotes(req, res){
+    connection.query("SELECT * FROM quotes;", function(err, results){
+       if(err)
+           return res.status(500).send('Something went wrong with your request.').end();
+       res.render('index', {quotes: results});
+    });
+}
 
 // Start our server so that it can begin listening to client requests.
 app.listen(PORT, function() {
