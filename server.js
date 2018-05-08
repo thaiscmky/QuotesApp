@@ -43,12 +43,12 @@ function deleteQuote(req, res){
     connection.query("DELETE FROM quotes WHERE ?", {id: req.params.id}, function(err, results){
         if(err)
             return res.status(500).send("Something went wrong editing your quote").end();
-        res.status(200).send("Edit successful").end();
+        res.status(200).send("Delete successful").end();
     });
 }
 
 function updateQuote(req, res){
-    connection.query("UPDATE quotes SET ? WHERE ?", {quote: req.params.quote, author: req.params.author}, {id: req.params.id},
+    connection.query("UPDATE quotes SET ? WHERE ?", [{quote: req.body.quote, author: req.body.author}, {id: req.params.id}],
     function(err, results){
         if(err)
             return res.status(500).send("Something went wrong editing your quote").end();
@@ -57,7 +57,7 @@ function updateQuote(req, res){
 }
 
 function addQuote(req, res){
-    connection.query("INSERT INTO quotes SET ?", {author: req.params.author, quote: req.params.quote},
+    connection.query("INSERT INTO quotes SET ?", {author: req.body.author, quote: req.body.quote},
     function(err, results){
         if(err)
             return res.status(500).send("Something went wrong submitting your quote").end();
