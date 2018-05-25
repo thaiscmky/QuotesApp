@@ -1,15 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: thais.cailet
- * Date: 5/23/18
- * Time: 2:27 PM
- */
 $consumerKey = "j363fhnuwcrcac5rao08222xr0vyhsq0";
-$consumerSecret = "0fvj1a86iigx6p21mcce9poa8u4f7qn9";
 $accessToken = "i5winc5f73ysay2opskw8y7igw9tsv18";
-$accessTokenSecret = "n0pmm2bcgcgem26qya0jmrbk807x6o8g";
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,54 +15,130 @@ $accessTokenSecret = "n0pmm2bcgcgem26qya0jmrbk807x6o8g";
 </head>
 <body>
 <div class="container-fluid" id="main">
-        <div class="container">
-            <div class="col main pt-5 mt-3 ml-3">
-                <div class="card">
-                    <div class="card-header">
-                        eQuote <span id="step">Step 1</span> <span class="badge badge-success">Ready</span>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Some Title</h5>
-                        <p class="card-text">Some content</p>
-                        <form id="step1">
+    <div class="container">
+        <div class="col main pt-5 mt-3 ml-3">
+            <div class="card" id="equote_result">
+                <div class="card-body">
+
+                </div>
+            </div>
+            <div class="card" id="equote_demo">
+                <div class="card-header">
+                    <strong>eQuote</strong> <span id="step">Create Quote Request</span> <span class="badge badge-success">Ready</span>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Basic Information</h5>
+                    <p class="card-text"></p>
+                    <form id="step1">
+                        <fieldset id="product-info" class="form-group">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="inputEmail4">Magento Customer ID</label>
-                                    <input type="text" class="form-control" id="customerId" name="customerId">
+                                    <label for="customerId">Magento Customer ID</label>
+                                    <input type="text" class="form-control" id="customerId" name="customerId" value="2041" required>
                                 </div>
+                            </div>
+                            <div class="form-row" id="products">
+                            </div>
+                        </fieldset>
+                        <hr>
+                        <fieldset id="shipping-info" class="form-group">
+                            <h5 class="card-title">Shipping Address</h5>
+                            <p class="card-text">* Required to obtain shipping rates.</p>
+                            <div class="form-group">
+                                <label for="shippingstreet1">Street 1</label>
+                                <input type="text" class="form-control" id="shippingaddress1" name="shippingaddress1" value="2130 West Sam Houston Pkwy N">
+                            </div>
+                            <div class="form-group">
+                                <label for="shippingstreet2">Street 2</label>
+                                <input type="text" class="form-control" id="shippingstreet2" name="shippingstreet2" placeholder="">
                             </div>
                             <div class="form-row">
-                                <!--there will be more than one of these-->
                                 <div class="form-group col-md-6">
-                                    <label for="inputPassword4">Product SKU</label>
-                                    <input type="text" class="form-control" id="productsku-1" name="productsku-1">
+                                    <label for="shippingcity">City</label>
+                                    <input type="text" class="form-control" id="shippingcity" name="shippingcity">
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="inputPassword4">Product Price</label>
-                                    <input type="text" class="form-control" id="productprice-1" name="productprice-1">
+                                <div class="form-group col-md-4">
+                                    <label for="shippingstate">State</label>
+                                    <select id="shippingstate" name="shippingstate" class="form-control">
+                                        <option value="AL">Alabama</option>
+                                        <option value="AK">Alaska</option>
+                                        <option value="AZ">Arizona</option>
+                                        <option value="AR">Arkansas</option>
+                                        <option value="CA">California</option>
+                                        <option value="CO">Colorado</option>
+                                        <option value="CT">Connecticut</option>
+                                        <option value="DE">Delaware</option>
+                                        <option value="DC">District Of Columbia</option>
+                                        <option value="FL">Florida</option>
+                                        <option value="GA">Georgia</option>
+                                        <option value="HI">Hawaii</option>
+                                        <option value="ID">Idaho</option>
+                                        <option value="IL">Illinois</option>
+                                        <option value="IN">Indiana</option>
+                                        <option value="IA">Iowa</option>
+                                        <option value="KS">Kansas</option>
+                                        <option value="KY">Kentucky</option>
+                                        <option value="LA">Louisiana</option>
+                                        <option value="ME">Maine</option>
+                                        <option value="MD">Maryland</option>
+                                        <option value="MA">Massachusetts</option>
+                                        <option value="MI">Michigan</option>
+                                        <option value="MN">Minnesota</option>
+                                        <option value="MS">Mississippi</option>
+                                        <option value="MO">Missouri</option>
+                                        <option value="MT">Montana</option>
+                                        <option value="NE">Nebraska</option>
+                                        <option value="NV">Nevada</option>
+                                        <option value="NH">New Hampshire</option>
+                                        <option value="NJ">New Jersey</option>
+                                        <option value="NM">New Mexico</option>
+                                        <option value="NY">New York</option>
+                                        <option value="NC">North Carolina</option>
+                                        <option value="ND">North Dakota</option>
+                                        <option value="OH">Ohio</option>
+                                        <option value="OK">Oklahoma</option>
+                                        <option value="OR">Oregon</option>
+                                        <option value="PA">Pennsylvania</option>
+                                        <option value="RI">Rhode Island</option>
+                                        <option value="SC">South Carolina</option>
+                                        <option value="SD">South Dakota</option>
+                                        <option value="TN">Tennessee</option>
+                                        <option value="TX" selected>Texas</option>
+                                        <option value="UT">Utah</option>
+                                        <option value="VT">Vermont</option>
+                                        <option value="VA">Virginia</option>
+                                        <option value="WA">Washington</option>
+                                        <option value="WV">West Virginia</option>
+                                        <option value="WI">Wisconsin</option>
+                                        <option value="WY">Wyoming</option>
+                                    </select>
                                 </div>
-                                <!--end of first product-->
-                            </div>
-                            <div class="form-group">
-                                <label for="">Quantity</label>
-                                <input type="text" class="form-control" id="" placeholder="">
-                            </div>
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="gridCheck">
-                                    <label class="form-check-label" for="gridCheck">
-                                        Check me out
-                                    </label>
+                                <div class="form-group col-md-2">
+                                    <label for="shippingzip">Zip</label>
+                                    <input type="text" class="form-control" id="shippingzip" name="shippingzip">
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">NEXT</button>
-                        </form>
-                    </div>
+                        </fieldset>
+                        <hr>
+                        <fieldset id="shipping-rates" class="form-group">
+                            <h5 class="card-title">Shipping Rates</h5>
+                            <p class="card-text">* Shipping estimate Endpoint requires a <strong>cartId</strong>. Shipping carriers can be selected once quote is created.</p>
+                            <small class="form-text text-muted">See the function <em>retrieveShippingRates()</em> for details</small>
+                            <div id="carriers"><!--available after cart is created--></div>
+                        </fieldset>
+                        <hr>
+                        <button type="submit" class="btn btn-primary" id="createnegotiablequote">Create Negotiable Quote</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</div>
+<br>
+<br>
+<br>
+<br>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
@@ -84,56 +151,263 @@ $accessTokenSecret = "n0pmm2bcgcgem26qya0jmrbk807x6o8g";
         "Authorization": "Bearer <?php echo $accessToken?>",
         "Content-Type": "application/json"
     };
+    var customerHeader = {
+        "Authorization": "Bearer <?php echo $consumerKey?>",
+        "Content-Type": "application/json"
+    };
 
-    let customerId = 2041; //Ty Kailet on staging
-    let item = {"sku": "INTEL.CP80617004119AE.SLBNB.1001.TR.NA", "qty": 1, "price": 15.00}; //price needs to be changed during negotiable quote process
+    let customerId = false;
+    let items = false;
+    let address = false;
+    let requestResults = {};
 
-    /**
-     * 1. Create customer cart quote
-     **/
-    createEmptyCart(customerId).then(response => {
-        return parseInt(response);
-    }).then(cartId => {
-        console.log(`Created cart ID: ${JSON.stringify(cartId, null, 4)}`);
-        /**
-         * 2. Add an item to the quote cart.
-         **/
-        return addItemToCart(cartId, item).then( cartItem => {
-            console.log(`Added cart item: ${JSON.stringify(cartItem, null, 4)}`);
-            return cartItem;
-        });
-    }).catch(err => err.responseText);
-
-    $("#step-1").submit(function( event ) {
-        event.preventDefault();
-        var formdata = $(this).serializeArray();
-        var request = {};
-        formdata.forEach(field => request[field.name] = field.value);
+    $(document).ready(function () {
+        createProductField(0);
+        listenToEvents();
     });
 
-    async function createEmptyCart(customerId){
-        return await $.ajax({
-            url: host + `/V1/customers/${customerId}/carts`,
-            type: 'post',
-            headers: appHeader,
-            dataType: 'json',
-            context: this
-        }).done(result => result)
-          .catch(err => err.responseText);
+    function listenToEvents(){
+        //Verify a SKU has been entered for the current product before adding another product to quote
+        $('button[id^="addproduct-"]').on('click', function(e){
+            let rowid = parseInt(this.id.substr(this.id.indexOf('-')+1) - 1);
+            if(!$(this).parents('#products').find('#productsku-'+rowid).val())
+                alert('Please enter a product first before adding another.');
+            else
+                createProductField(rowid+1);
+        });
+
+        //If address is filled, save data for next step with shipping rates
+        allowCalcShipping();
+
+        //Initiate quote request on submit
+        $("#step1").submit(function( event ) {
+            event.preventDefault();
+            var formdata = $(this).serializeArray();
+            var request = {};
+            let products = {};
+            products.productskus = [];
+            products.productqtys = [];
+            products.productprices = [];
+            formdata.forEach(field => {
+                switch(field.name){
+                    case 'productsku':
+                        products.productskus.push(field.value);
+                        break;
+                    case 'productqty':
+                        products.productqtys.push(field.value);
+                        break;
+                    case 'productprice':
+                        products.productprices.push(field.value);
+                        break;
+                    default:
+                        request[field.name] = field.value;
+                }
+            });
+            let filteredRequest = {
+                customerId: request.customerId,
+                cartItems: products.productskus.map( function(item, index){
+                    return { sku: item, qty: products.productqtys[index], price: products.productprices[index] }
+                }),
+                address: address
+            };
+
+            initiateNegotiableQuoteRequest(filteredRequest)
+        });
+
     }
 
-    async function addItemToCart(cartId, item){
-        item.quote_id = cartId;
-        return await $.ajax({
-            url: host + `/V1/carts/${cartId}/items`,
-            type: 'post',
-            headers: appHeader,
-            data: JSON.stringify({"cartItem": item}),
-            dataType: 'json',
-            context: this
-        }).done(result => result)
-          .catch(err => err.responseText);
+    function allowCalcShipping(){
+        let filled = 0;
+        $("#shipping-info input:text").on('blur', () =>{
+            filled = $("#shipping-info input:text").filter(function() {
+                return $.trim(this.value) != "";
+            });
+            let optional = $("#shipping-info input#shippingstreet2:text").val();
+            if( (filled.length >= 3 && optional === '') || filled.length >= 4){
+                let formaddress = $(filled).serializeArray();
+                addressObj = {};
+                formaddress.forEach(field => addressObj[field.name] = field.value);
+                addressObj.shippingstatecode = $("#shipping-info #shippingstate").val();
+                requestObj = {
+                    address: addressObj.shippingaddress1,
+                    region_code: addressObj.shippingstatecode,
+                    country_id: "US",
+                    street: [addressObj.shippingaddress1],
+                    postcode: addressObj.shippingzip,
+                    city: addressObj.shippingcity
+                };
+                console.log(`Address information saved for shipping rates after quote creation:
+                ${JSON.stringify(requestObj)}`);
+                address = requestObj;
+            }
+        });
     }
+
+    function formatShippingRate(carriers){
+        let html = '';
+        $.each(carriers, (i, carrier) => {
+            html += `
+                <label class="form-check-label">
+                    <input class="form-check-input" type="radio" name="carrier" id="${carrier.carrier_code}" value="${carrier.carrier_code}">
+                    ${carrier_title} $${carrier.price_excl_tax} ($${carrier.price_inc_tax} with taxes)
+                </label>
+            `;
+        });
+        html = `<div class="form-group">${html}</div>`;
+        return html;
+    }
+
+    function createProductField(id){
+        let html = '';
+        html += `<div class="form-group col-4">
+                    <label for="productsku-${id}">Product SKU</label>
+                    <input type="text" class="form-control" id="productsku-${id}" name="productsku" required>
+                    <small id="productpriceHelp" class="form-text text-muted">Original price of the product does not change before a negotiable is created.</small>
+                </div>`;
+        html += `<div class="form-group col-2">
+                    <label for="productprice-${id}">Price</label>
+                    <input type="text" class="form-control" id="productprice-1" name="productprice">
+                </div>`;
+        html += `<div class="form-group col-1">
+                    <label for="productqty">Quantity</label>
+                    <input type="text" class="form-control" id="productqty-${id}" name="productqty" value="1" required>
+                </div>`;
+        html += `<div class="form-group col d-flex align-items-center mb-4">
+                    <button type="button" class="btn btn-sm" class="addproduct" id="addproduct-${id + 1}">Add another product</button>
+                </div>`;
+        $("#products").append(html);
+    }
+
+    function initiateNegotiableQuoteRequest(request){
+        //customerId, items, address
+        let customerId = request.customerId;
+        let items = request.cartItems;
+        let address = request.address ? request.address : false;
+        /**
+         * 1. Create customer cart quote
+         **/
+        createEmptyCart(customerId).then(response => {
+            requestResults.cartId = parseInt(response);
+            return parseInt(response);
+        }).then(cartId => {
+            console.log(`Created cart ID: ${JSON.stringify(cartId, null, 4)}`);
+
+            /**
+             * 2. Add an item to the quote cart.
+             **/
+            requestResults.cartItems = addItemToCart(cartId, items).then( cartItem => {
+                console.log(`Added cart item: ${JSON.stringify(cartItem, null, 4)}`);
+                return cartItem;
+            }).then(cartId => {
+                let name = "Example quote";
+                let comment = "This was run from eQuote demo for cartID "+cartId;
+                requestNegotiableQuote(cartId, name, comment).then(created => {
+                    if(created)
+                        console.log(`Negotiable Quote has been created`);
+                    else
+                        console.log(`Negotiable Quote not created`);
+                });
+                return cartId;
+            });
+            return cartId;
+
+        })
+        .then(cartId => {
+            if(address)
+                setNegotiableShippingInfo(cartId).then(result => {
+                    console.log(`Set negotiable quote shipping, received: ${JSON.stringify(result, null, 4)}`);
+                    requestResults.negotiableQuote = result;
+                });
+                return { cartId, address };
+        })
+        .then(cartId => {
+            if(address)
+                return retrieveShippingRates(address, cartId).then( carriers => {
+                    console.log(`Received shipping estimates: ${JSON.stringify(carriers, null, 4)}`);
+                    requestResults.cariers = carriers;
+                });
+        }).then(() => {
+            console.log('Completed API requests for creating a quote');
+        })
+        .catch(err => err.responseText);
+
+        async function createEmptyCart(customerId){
+            return await $.ajax({
+                url: host + `/V1/customers/${customerId}/carts`,
+                type: 'post',
+                headers: appHeader,
+                dataType: 'json',
+                context: this
+            }).done(result => result)
+                .catch(err => err.responseText);
+        }
+
+        async function addItemToCart(cartId, items){
+
+            const addItems = async () => {
+                await asyncForEach(items, async (item) => {
+                    item.quote_id = cartId;
+                    await $.ajax({
+                        url: host + `/V1/carts/${cartId}/items`,
+                        type: 'post',
+                        headers: appHeader,
+                        data: JSON.stringify({"cartItem": item}),
+                        dataType: 'json',
+                        context: this
+                    }).done(result => result)
+                        .catch(err => err.responseText);
+                });
+            };
+
+            addItems();
+
+            async function asyncForEach(array, callback) {
+                for (let index = 0; index < array.length; index++) {
+                    await callback(array[index], index, array)
+                }
+            }
+        }
+
+        async function requestNegotiableQuote(cartId, name, comment){
+            return await $.ajax({
+                url: host + `/V1/negotiableQuote/request`,
+                type: 'post',
+                headers: appHeader,
+                data: JSON.stringify({
+                    "quoteId": cartId,
+                    "quoteName": name,
+                    "comment": comment
+                }),
+                dataType: 'json',
+                context: this
+            }).done(result => result).catch(err => err.responseText);
+        }
+
+        async function setNegotiableShippingInfo(cartId){
+            return await $.ajax({
+                url: host + `/V1/negotiable-carts/${cartId}/shipping-information`,
+                type: 'post',
+                headers: appHeader,
+                data: JSON.stringify({
+                    addressInformation: { shipping_address: address}
+                }),
+                dataType: 'json',
+                context: this
+            }).done(result => result).catch(err => err.responseText);
+        }
+
+        async function retrieveShippingRates(address, cartId){
+            return await $.ajax({
+                url: host + `/V1/negotiable-carts/${cartId}/estimate-shipping-methods`,
+                type: 'post',
+                headers: appHeader,
+                data: JSON.stringify(address),
+                dataType: 'json',
+                context: this
+            }).done(result => result).catch(err => err.responseText);
+        }
+    }
+
 </script>
 </body>
 </html>
