@@ -1,6 +1,6 @@
 <?php
-$consumerKey = "j363fhnuwcrcac5rao08222xr0vyhsq0";
-$accessToken = "i5winc5f73ysay2opskw8y7igw9tsv18";
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,6 +30,15 @@ $accessToken = "i5winc5f73ysay2opskw8y7igw9tsv18";
                     <h5 class="card-title">Basic Information</h5>
                     <p class="card-text"></p>
                     <form id="step1">
+                        <fieldset id="quote-info" class="form-group">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="quoteName">Quote Name</label>
+                                    <input type="text" class="form-control" id="quoteName" name="quoteName" value="Foobar" required>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <hr>
                         <fieldset id="product-info" class="form-group">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
@@ -127,6 +136,16 @@ $accessToken = "i5winc5f73ysay2opskw8y7igw9tsv18";
                             <div id="carriers"><!--available after cart is created--></div>
                         </fieldset>
                         <hr>
+                        <fieldset id="misc" class="form-group">
+                            <h5 class="card-title">Additional Information</h5>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="quoteComment">Quote Comments</label>
+                                    <textarea class="form-control" id="quoteComment" name="quoteComment" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <hr>
                         <button type="submit" class="btn btn-primary" id="createnegotiablequote">Create Negotiable Quote</button>
                     </form>
                 </div>
@@ -146,15 +165,6 @@ $accessToken = "i5winc5f73ysay2opskw8y7igw9tsv18";
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
         crossorigin="anonymous"></script>
 <script>
-    var host = 'https://stg-hollister.smithbuy.com/rest';
-    var appHeader = {
-        "Authorization": "Bearer <?php echo $accessToken?>",
-        "Content-Type": "application/json"
-    };
-    var customerHeader = {
-        "Authorization": "Bearer <?php echo $consumerKey?>",
-        "Content-Type": "application/json"
-    };
 
     let customerId = false;
     let items = false;
@@ -204,6 +214,8 @@ $accessToken = "i5winc5f73ysay2opskw8y7igw9tsv18";
                 }
             });
             let filteredRequest = {
+                quoteName: request.quoteName,
+                quoteComment: request.quoteComment,
                 customerId: request.customerId,
                 cartItems: products.productskus.map( function(item, index){
                     return { sku: item, qty: products.productqtys[index], price: products.productprices[index] }
@@ -279,133 +291,15 @@ $accessToken = "i5winc5f73ysay2opskw8y7igw9tsv18";
     }
 
     function initiateNegotiableQuoteRequest(request){
-        //customerId, items, address
-        let customerId = request.customerId;
-        let items = request.cartItems;
-        let address = request.address ? request.address : false;
-        /**
-         * 1. Create customer cart quote
-         **/
-        createEmptyCart(customerId).then(response => {
-            requestResults.cartId = parseInt(response);
-            return parseInt(response);
-        }).then(cartId => {
-            console.log(`Created cart ID: ${JSON.stringify(cartId, null, 4)}`);
-
-            /**
-             * 2. Add an item to the quote cart.
-             **/
-            requestResults.cartItems = addItemToCart(cartId, items).then( cartItem => {
-                console.log(`Added cart item: ${JSON.stringify(cartItem, null, 4)}`);
-                return cartItem;
-            }).then(cartId => {
-                let name = "Example quote";
-                let comment = "This was run from eQuote demo for cartID "+cartId;
-                requestNegotiableQuote(cartId, name, comment).then(created => {
-                    if(created)
-                        console.log(`Negotiable Quote has been created`);
-                    else
-                        console.log(`Negotiable Quote not created`);
-                });
-                return cartId;
-            });
-            return cartId;
-
-        })
-        .then(cartId => {
-            if(address)
-                setNegotiableShippingInfo(cartId).then(result => {
-                    console.log(`Set negotiable quote shipping, received: ${JSON.stringify(result, null, 4)}`);
-                    requestResults.negotiableQuote = result;
-                });
-                return { cartId, address };
-        })
-        .then(cartId => {
-            if(address)
-                return retrieveShippingRates(address, cartId).then( carriers => {
-                    console.log(`Received shipping estimates: ${JSON.stringify(carriers, null, 4)}`);
-                    requestResults.cariers = carriers;
-                });
-        }).then(() => {
-            console.log('Completed API requests for creating a quote');
-        })
-        .catch(err => err.responseText);
-
-        async function createEmptyCart(customerId){
-            return await $.ajax({
-                url: host + `/V1/customers/${customerId}/carts`,
-                type: 'post',
-                headers: appHeader,
-                dataType: 'json',
-                context: this
-            }).done(result => result)
-                .catch(err => err.responseText);
-        }
-
-        async function addItemToCart(cartId, items){
-
-            const addItems = async () => {
-                await asyncForEach(items, async (item) => {
-                    item.quote_id = cartId;
-                    await $.ajax({
-                        url: host + `/V1/carts/${cartId}/items`,
-                        type: 'post',
-                        headers: appHeader,
-                        data: JSON.stringify({"cartItem": item}),
-                        dataType: 'json',
-                        context: this
-                    }).done(result => result)
-                        .catch(err => err.responseText);
-                });
-            };
-
-            addItems();
-
-            async function asyncForEach(array, callback) {
-                for (let index = 0; index < array.length; index++) {
-                    await callback(array[index], index, array)
-                }
-            }
-        }
-
-        async function requestNegotiableQuote(cartId, name, comment){
-            return await $.ajax({
-                url: host + `/V1/negotiableQuote/request`,
-                type: 'post',
-                headers: appHeader,
-                data: JSON.stringify({
-                    "quoteId": cartId,
-                    "quoteName": name,
-                    "comment": comment
-                }),
-                dataType: 'json',
-                context: this
-            }).done(result => result).catch(err => err.responseText);
-        }
-
-        async function setNegotiableShippingInfo(cartId){
-            return await $.ajax({
-                url: host + `/V1/negotiable-carts/${cartId}/shipping-information`,
-                type: 'post',
-                headers: appHeader,
-                data: JSON.stringify({
-                    addressInformation: { shipping_address: address}
-                }),
-                dataType: 'json',
-                context: this
-            }).done(result => result).catch(err => err.responseText);
-        }
-
-        async function retrieveShippingRates(address, cartId){
-            return await $.ajax({
-                url: host + `/V1/negotiable-carts/${cartId}/estimate-shipping-methods`,
-                type: 'post',
-                headers: appHeader,
-                data: JSON.stringify(address),
-                dataType: 'json',
-                context: this
-            }).done(result => result).catch(err => err.responseText);
-        }
+        console.log(request);
+        $.ajax({
+            url: `./step_one.php`,
+            type: 'post',
+            data: request,
+            dataType: 'json',
+            context: this
+        }).done(result => console.log(result))
+            .catch(err => err.responseText);
     }
 
 </script>
