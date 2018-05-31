@@ -1,4 +1,7 @@
 <?php
+session_start();
+//API call responses are stored in this variable
+$_SESSION['api_info'] = [];
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ?>
@@ -11,143 +14,65 @@ ini_set('display_errors', 1);
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
           crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <style>
+        #equote_result {
+            margin-top: 25px;
+            background-color: #FFFFCC;
+            border: 2px dashed #FF6666;
+        }
+        #equote_result pre {
+            font-size: 87.5%;
+            color: #212529;
+            margin: 10px -20px -15px 5px;
+            white-space: pre-wrap;
+            overflow-y: scroll;
+            height: 200px;
+        }
+        .table-responsive.products { font-size: 12px;}
+        #step1, #step2, #step3, #step4
+        {
+            display:none;
+        }
+    </style>
     <title>eQuote Prototype</title>
 </head>
 <body>
 <div class="container-fluid" id="main">
     <div class="container">
         <div class="col main pt-5 mt-3 ml-3">
-            <div class="card" id="equote_result">
+            <div class="card equote_demo">
+                <div class="card-header">
+                    <strong>eQuote</strong> <span id="step">Create customer order</span> <span class="badge badge-success">Ready</span>
+                </div>
                 <div class="card-body">
-
+                    <?php include_once 'step1form.php'; ?>
                 </div>
             </div>
-            <div class="card" id="equote_demo">
+
+            <div class="card equote_demo mt-5">
                 <div class="card-header">
-                    <strong>eQuote</strong> <span id="step">Create Quote Request</span> <span class="badge badge-success">Ready</span>
+                    <strong>eQuote</strong> <span id="step">Add products to order</span> <span class="badge badge-success">Ready</span>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">Basic Information</h5>
-                    <p class="card-text"></p>
-                    <form id="step1">
-                        <fieldset id="quote-info" class="form-group">
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="quoteName">Quote Name</label>
-                                    <input type="text" class="form-control" id="quoteName" name="quoteName" value="Foobar" required>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <hr>
-                        <fieldset id="product-info" class="form-group">
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="customerId">Magento Customer ID</label>
-                                    <input type="text" class="form-control" id="customerId" name="customerId" value="2041" required>
-                                </div>
-                            </div>
-                            <div class="form-row" id="products">
-                            </div>
-                        </fieldset>
-                        <hr>
-                        <fieldset id="shipping-info" class="form-group">
-                            <h5 class="card-title">Shipping Address</h5>
-                            <p class="card-text">* Required to obtain shipping rates.</p>
-                            <div class="form-group">
-                                <label for="shippingstreet1">Street 1</label>
-                                <input type="text" class="form-control" id="shippingaddress1" name="shippingaddress1" value="2130 West Sam Houston Pkwy N">
-                            </div>
-                            <div class="form-group">
-                                <label for="shippingstreet2">Street 2</label>
-                                <input type="text" class="form-control" id="shippingstreet2" name="shippingstreet2" placeholder="">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="shippingcity">City</label>
-                                    <input type="text" class="form-control" id="shippingcity" name="shippingcity">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="shippingstate">State</label>
-                                    <select id="shippingstate" name="shippingstate" class="form-control">
-                                        <option value="AL">Alabama</option>
-                                        <option value="AK">Alaska</option>
-                                        <option value="AZ">Arizona</option>
-                                        <option value="AR">Arkansas</option>
-                                        <option value="CA">California</option>
-                                        <option value="CO">Colorado</option>
-                                        <option value="CT">Connecticut</option>
-                                        <option value="DE">Delaware</option>
-                                        <option value="DC">District Of Columbia</option>
-                                        <option value="FL">Florida</option>
-                                        <option value="GA">Georgia</option>
-                                        <option value="HI">Hawaii</option>
-                                        <option value="ID">Idaho</option>
-                                        <option value="IL">Illinois</option>
-                                        <option value="IN">Indiana</option>
-                                        <option value="IA">Iowa</option>
-                                        <option value="KS">Kansas</option>
-                                        <option value="KY">Kentucky</option>
-                                        <option value="LA">Louisiana</option>
-                                        <option value="ME">Maine</option>
-                                        <option value="MD">Maryland</option>
-                                        <option value="MA">Massachusetts</option>
-                                        <option value="MI">Michigan</option>
-                                        <option value="MN">Minnesota</option>
-                                        <option value="MS">Mississippi</option>
-                                        <option value="MO">Missouri</option>
-                                        <option value="MT">Montana</option>
-                                        <option value="NE">Nebraska</option>
-                                        <option value="NV">Nevada</option>
-                                        <option value="NH">New Hampshire</option>
-                                        <option value="NJ">New Jersey</option>
-                                        <option value="NM">New Mexico</option>
-                                        <option value="NY">New York</option>
-                                        <option value="NC">North Carolina</option>
-                                        <option value="ND">North Dakota</option>
-                                        <option value="OH">Ohio</option>
-                                        <option value="OK">Oklahoma</option>
-                                        <option value="OR">Oregon</option>
-                                        <option value="PA">Pennsylvania</option>
-                                        <option value="RI">Rhode Island</option>
-                                        <option value="SC">South Carolina</option>
-                                        <option value="SD">South Dakota</option>
-                                        <option value="TN">Tennessee</option>
-                                        <option value="TX" selected>Texas</option>
-                                        <option value="UT">Utah</option>
-                                        <option value="VT">Vermont</option>
-                                        <option value="VA">Virginia</option>
-                                        <option value="WA">Washington</option>
-                                        <option value="WV">West Virginia</option>
-                                        <option value="WI">Wisconsin</option>
-                                        <option value="WY">Wyoming</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label for="shippingzip">Zip</label>
-                                    <input type="text" class="form-control" id="shippingzip" name="shippingzip">
-                                </div>
-                            </div>
-                        </fieldset>
-                        <hr>
-                        <fieldset id="shipping-rates" class="form-group">
-                            <h5 class="card-title">Shipping Rates</h5>
-                            <p class="card-text">* Shipping estimate Endpoint requires a <strong>cartId</strong>. Shipping carriers can be selected once quote is created.</p>
-                            <small class="form-text text-muted">See the function <em>retrieveShippingRates()</em> for details</small>
-                            <div id="carriers"><!--available after cart is created--></div>
-                        </fieldset>
-                        <hr>
-                        <fieldset id="misc" class="form-group">
-                            <h5 class="card-title">Additional Information</h5>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="quoteComment">Quote Comments</label>
-                                    <textarea class="form-control" id="quoteComment" name="quoteComment" rows="3"></textarea>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <hr>
-                        <button type="submit" class="btn btn-primary" id="createnegotiablequote">Create Negotiable Quote</button>
-                    </form>
+                    <?php include_once 'step2form.php'; ?>
+                </div>
+            </div>
+
+            <div class="card equote_demo mt-5">
+                <div class="card-header">
+                    <strong>eQuote</strong> <span id="step">Set shipping method</span> <span class="badge badge-success">Ready</span>
+                </div>
+                <div class="card-body">
+                    <?php include_once 'step3form.php'; ?>
+                </div>
+            </div>
+
+            <div class="card equote_demo mt-5">
+                <div class="card-header">
+                    <strong>eQuote</strong> <span id="step">Convert order to quote</span> <span class="badge badge-success">Ready</span>
+                </div>
+                <div class="card-body">
+                    <?php include_once 'step4form.php'; ?>
                 </div>
             </div>
         </div>
@@ -166,68 +91,40 @@ ini_set('display_errors', 1);
         crossorigin="anonymous"></script>
 <script>
 
-    let customerId = false;
-    let items = false;
     let address = false;
+    let request = {};
     let requestResults = {};
 
     $(document).ready(function () {
+        $('#step1').parents('.equote_demo').show();
         createProductField(0);
         listenToEvents();
     });
 
     function listenToEvents(){
-        //Verify a SKU has been entered for the current product before adding another product to quote
-        $('button[id^="addproduct-"]').on('click', function(e){
-            let rowid = parseInt(this.id.substr(this.id.indexOf('-')+1) - 1);
-            if(!$(this).parents('#products').find('#productsku-'+rowid).val())
-                alert('Please enter a product first before adding another.');
-            else
-                createProductField(rowid+1);
-        });
-
         //If address is filled, save data for next step with shipping rates
         allowCalcShipping();
-
         //Initiate quote request on submit
-        $("#step1").submit(function( event ) {
-            event.preventDefault();
-            var formdata = $(this).serializeArray();
-            var request = {};
-            let products = {};
-            products.productskus = [];
-            products.productqtys = [];
-            products.productprices = [];
-            formdata.forEach(field => {
-                switch(field.name){
-                    case 'productsku':
-                        products.productskus.push(field.value);
-                        break;
-                    case 'productqty':
-                        products.productqtys.push(field.value);
-                        break;
-                    case 'productprice':
-                        products.productprices.push(field.value);
-                        break;
-                    default:
-                        request[field.name] = field.value;
-                }
-            });
-            let filteredRequest = {
-                quoteName: request.quoteName,
-                quoteComment: request.quoteComment,
-                customerId: request.customerId,
-                cartItems: products.productskus.map( function(item, index){
-                    return { sku: item, qty: products.productqtys[index], price: products.productprices[index] }
-                }),
-                address: address
-            };
-
-            initiateNegotiableQuoteRequest(filteredRequest)
-        });
+        createCustomerCart();
+        //Add items to quote request
+        addProductsToCart();
+        /**
+         * PROTOTYPE UI ONLY; NOT PART OF API CALLS:
+         * Verify a SKU has been entered for the current product before adding another product to quote
+         * API call takes one product at a time
+         **/
+        validateAddProductToCart();
 
     }
 
+    function setStepMessage(message, classToggle){
+        $('.equote_demo span.badge').text(message);
+        $('.equote_demo span.badge').toggleClass(classToggle);
+    }
+
+    /**
+     * Start Cart Creation methods
+     * */
     function allowCalcShipping(){
         let filled = 0;
         $("#shipping-info input:text").on('blur', () =>{
@@ -240,11 +137,11 @@ ini_set('display_errors', 1);
                 addressObj = {};
                 formaddress.forEach(field => addressObj[field.name] = field.value);
                 addressObj.shippingstatecode = $("#shipping-info #shippingstate").val();
-                requestObj = {
-                    address: addressObj.shippingaddress1,
+                let requestObj = {
+                    street: optional.length ?
+                        [addressObj.shippingaddress1, optional] : [addressObj.shippingaddress1],
                     region_code: addressObj.shippingstatecode,
                     country_id: "US",
-                    street: [addressObj.shippingaddress1],
                     postcode: addressObj.shippingzip,
                     city: addressObj.shippingcity
                 };
@@ -255,52 +152,209 @@ ini_set('display_errors', 1);
         });
     }
 
+    function createCustomerCart(){
+        $("#step1").submit(function( event ) {
+            event.preventDefault();
+            console.log('Creating cart...');
+            var formdata = $(this).serializeArray();
+            formdata.forEach(field => {
+                request[field.name] = field.value;
+            });
+            let filteredRequest = { customerId: request.customerId };
+            if(address) filteredRequest.address = address;
+            request = filteredRequest;
+
+            setStepMessage('Creating customer cart...', 'badge-success badge-warning');
+
+            $.ajax({
+                url: `./stpone_createcart.php`,
+                type: 'post',
+                data: request,
+                dataType: 'json',
+                context: this
+            }).done(result => {
+                console.log('Result:');
+                console.log(result);
+                $('#step1').parents('.equote_demo').hide();
+                $('#step2').parents('.equote_demo').show();
+                $('.equote_demo span.badge').text('Ready');
+                setStepMessage('Ready', 'badge-warning badge-success');
+                $('.equote_demo #step').text('Add products to cart quote');
+                $('.equote_demo .quoteId').text(result.cartId);
+                $('.equote_demo .customerId').text(result.customerId);
+                if(address) {
+                    $('.equote_demo .customerShipping').html(
+                        `<br>${address.street.join(',')}<br> ${address.city}, ${address.region_code} ${address.postcode} - ${address.country_id}`
+                    );
+
+                }
+
+            }).catch(err => console.log(err.responseText));
+        });
+    }
+
+    /**
+     * End Cart Creation methods
+     **/
+
+    /**
+     * Start Add Products to Cart methods
+     **/
+
+    function validateAddProductToCart(){
+        $('button[id^="addproduct-"]').on('click', function(e){
+            let rowid = parseInt(this.id.substr(this.id.indexOf('-')+1) - 1);
+            if(!$(this).parents('#products').find('#productsku-'+rowid).val())
+                alert('Please enter a product first before adding another.');
+            else
+                createProductField(rowid+1);
+        });
+    }
+
+    function createProductField(id){
+        let html = '';
+        html += `<div class="form-group col">
+                    <label for="productsku-${id}">Product SKU</label>
+                    <input type="text" class="form-control" id="productsku-${id}" name="productsku" required>
+                </div>`;
+        html += `<div class="form-group col-2">
+                    <label for="productqty">Quantity</label>
+                    <input type="text" class="form-control" id="productqty-${id}" name="productqty" value="1" required>
+                </div>`;
+        html += `<div class="form-group col d-flex align-items-center mt-4">
+                    <button type="button" class="btn btn-sm" class="addproduct" id="addproduct-${id + 1}">Add another product</button>
+                </div>`;
+        $("#products").append(html);
+    }
+
     function formatShippingRate(carriers){
         let html = '';
         $.each(carriers, (i, carrier) => {
             html += `
+                <div class="form-group col">
                 <label class="form-check-label">
                     <input class="form-check-input" type="radio" name="carrier" id="${carrier.carrier_code}" value="${carrier.carrier_code}">
-                    ${carrier_title} $${carrier.price_excl_tax} ($${carrier.price_inc_tax} with taxes)
+                    ${carrier.carrier_title} $${carrier.price_excl_tax} ($${carrier.price_incl_tax} with taxes)
                 </label>
+                </div>
             `;
         });
         html = `<div class="form-group">${html}</div>`;
         return html;
     }
 
-    function createProductField(id){
+    function formatAddedProducts(products){
         let html = '';
-        html += `<div class="form-group col-4">
-                    <label for="productsku-${id}">Product SKU</label>
-                    <input type="text" class="form-control" id="productsku-${id}" name="productsku" required>
-                    <small id="productpriceHelp" class="form-text text-muted">Original price of the product does not change before a negotiable is created.</small>
-                </div>`;
-        html += `<div class="form-group col-2">
-                    <label for="productprice-${id}">Price</label>
-                    <input type="text" class="form-control" id="productprice-1" name="productprice">
-                </div>`;
-        html += `<div class="form-group col-1">
-                    <label for="productqty">Quantity</label>
-                    <input type="text" class="form-control" id="productqty-${id}" name="productqty" value="1" required>
-                </div>`;
-        html += `<div class="form-group col d-flex align-items-center mb-4">
-                    <button type="button" class="btn btn-sm" class="addproduct" id="addproduct-${id + 1}">Add another product</button>
-                </div>`;
-        $("#products").append(html);
+        $.each(products, (i, product) => {
+            html+=`<tr>
+                      <th scope="row">${product.item_id}</th>
+                      <td>${product.sku}</td>
+                      <td>${product.qty}</td>
+                      <td>${product.name}</td>
+                    </tr>`;
+        });
+        html = `<div class="table-responsive products"><table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">#ID</th>
+                      <th scope="col">SKU</th>
+                      <th scope="col">Quantity</th>
+                      <th scope="col">Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${html}
+                  </tbody>
+                </table></div>`;
+        return html;
     }
 
-    function initiateNegotiableQuoteRequest(request){
-        console.log(request);
-        $.ajax({
-            url: `./step_one.php`,
-            type: 'post',
-            data: request,
-            dataType: 'json',
-            context: this
-        }).done(result => console.log(result))
-            .catch(err => err.responseText);
+    function addProductsToCart(){
+        $("#step2").submit(function( event ) {
+            event.preventDefault();
+            console.log('Adding products...');
+            var formdata = $(this).serializeArray();
+            let products = {};
+            products.productskus = [];
+            products.productqtys = [];
+            products.productprices = [];
+            formdata.forEach(field => {
+                switch(field.name){
+                    case 'productsku':
+                        products.productskus.push(field.value);
+                        break;
+                    case 'productqty':
+                        products.productqtys.push(field.value);
+                        break;
+                    default:
+                        request[field.name] = field.value;
+                }
+            });
+            let filteredRequest = {
+                quoteName: request.quoteName,
+                quoteComment: request.quoteComment,
+                quotePrice: request.quoteNegotiatedPrice,
+                customerId: request.customerId,
+                cartItems: products.productskus.map( function(item, index){
+                    return { sku: item, qty: products.productqtys[index], price: products.productprices[index] }
+                })
+            };
+
+            if(address) filteredRequest.address = address;
+
+            request = filteredRequest;
+
+            setStepMessage('Adding products to cart...', 'badge-success badge-warning');
+
+            $.ajax({
+                url: `./stptwo_addproducts.php`,
+                type: 'post',
+                data: request,
+                dataType: 'json',
+                context: this
+            }).done(result => {
+                console.log('Result:');
+                console.log(result);
+                $('#step2').parents('.equote_demo').hide();
+                $('#step3').parents('.equote_demo').show();
+                $('.equote_demo span.badge').text('Ready');
+                setStepMessage('Ready', 'badge-warning badge-success');
+                $('.equote_demo #step').text('Add products to cart quote');
+                $('.equote_demo .negotiableId').text(result.cartId);
+                $('.equote_demo .negotiableProds').html(formatAddedProducts(result['itemsAdded']));
+                $('.equote_demo .negotiablePrice').text(request.quotePrice);
+                $('.equote_demo .negotiablePriceType').text(`(3) Set a proposed price for the entire quote`);
+                $('.equote_demo .customerId').text(result.customerId);
+                if(address) {
+                    $('.equote_demo .customerShipping').html(
+                        `<br>${address.street.join(',')}<br> ${address.city}, ${address.region_code} ${address.postcode} - ${address.country_id}`
+                    );
+                    if(typeof result['shippingCarriers'] !== 'undefined' && result['shippingCarriers'] !== null)
+                        $('#negotiable-carriers').html(formatShippingRate(result['shippingCarriers']));
+                }
+
+            }).catch(err => console.log(err.responseText));
+        });
     }
+    /**
+     * End Add Products to Cart methods
+     **/
+
+    /**
+     * Start Set Shipping methods
+     **/
+
+    /**
+     * End Set Shipping methods
+     **/
+    <!-- TODO -->
+    /**
+     * Start Update Negotiable Quote methods
+     **/
+    <!-- future implementation -->
+    /**
+     * Start Update Negotiable Quote methods
+     **/
 
 </script>
 </body>

@@ -12,29 +12,28 @@ function requestNegotiableQuote($name, $comment = null){
     );
 }
 
-function getShippingRates($address){
+function setNegotiableShippingMethod($carrier_code){
 
     global $host, $accessToken, $info;
-
-    $info['shippingCarriers'] = postRequest(
-        $host . "/V1/negotiable-carts/{$info['cartId']}/estimate-shipping-methods",
+    $info['shippingInfo'] = putRequest(
+        $host . "/V1/negotiableQuote/{$info['cartId']}/shippingMethod",
         ['Content-Type: application/json', "Authorization: Bearer $accessToken"],
-        ['address' => $address]
+        ['shippingMethod' => $carrier_code]
     );
-
 }
 
-function setNegotiableShippingInfo($address, $carrier_code){
+function setNegotiablePrice($value, $type = 3){
 
     global $host, $accessToken, $info;
 
-    $info['shippingInfo'] = postRequest(
+    $info['setQuotePrice'] = putRequest(
         $host . "/V1/negotiable-carts/{$info['cartId']}/shipping-information",
         ['Content-Type: application/json', "Authorization: Bearer $accessToken"],
-        ['addressInformation' => [
-            'shipping_address' => $address,
-            'billing_address' => $address,
-            'shipping_method_code' => $carrier_code
+        ['quote' => [
+            'id' => $info['cartId'],
+            'extension_attributes' => [
+                'negotiable_quote' => [ 'negotiated_price_type' => $type, 'negotiated_price_value' => $value]
+            ]
         ]]
     );
 }

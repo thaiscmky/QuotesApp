@@ -26,7 +26,24 @@ function addItemsToCart($items){
     }
 }
 
+function setShippingAddress($address){
+    global $host, $accessToken, $info;
+    $info['shippingAddress'] = postRequest(
+        $host . "/V1/carts/{$info['cartId']}/billing-address", //V1/carts/mine/billing-address
+        ['Content-Type: application/json', "Authorization: Bearer $accessToken"],
+        ['cartId' => $info['cartId'], 'address' => $address]
+    );
+}
+function getShippingRates($address){
 
+    global $host, $accessToken, $info;
+    $info['shippingCarriers'] = postRequest(
+        $host . "/V1/carts/{$info['cartId']}/estimate-shipping-methods",
+        ['Content-Type: application/json', "Authorization: Bearer $accessToken"],
+        ['address' => $address]
+    );
+
+}
 
 
 
