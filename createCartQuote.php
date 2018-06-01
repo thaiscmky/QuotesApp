@@ -26,14 +26,70 @@ function addItemsToCart($items){
     }
 }
 
-function setShippingAddress($address){
+function getCarrierByCode($carrier_code){
+    global $info;
+    foreach ($info['shippingCarriers'] as $carrier){
+        $carrier = json_decode(json_encode($carrier), true);
+        if($carrier['carrier_code'] === $carrier_code){
+            return $carrier;
+        }
+    }
+}
+
+function getCustomerInformation(){
     global $host, $accessToken, $info;
-    $info['shippingAddress'] = postRequest(
-        $host . "/V1/carts/{$info['cartId']}/billing-address", //V1/carts/mine/billing-address
+    $info['customerInfo'] = getRequest(
+        $host . "/V1/customers/{$info['customerId']}",
+        ['Content-Type: application/json', "Authorization: Bearer $accessToken"]
+    );
+
+    $info['customerInfo'] = json_decode(json_encode($info['customerInfo']), true);
+
+    return $info['customerInfo'];
+}
+
+function getCustomerCompanyById($companyId){
+    global $host, $accessToken, $info;
+    $info['companyInfo'] = getRequest(
+        $host . "/V1/company/$companyId",
+        ['Content-Type: application/json', "Authorization: Bearer $accessToken"]
+    );
+
+    $info['companyInfo'] = json_decode(json_encode($info['companyInfo']), true);
+
+    return $info['companyInfo'];
+}
+
+function setShippingInformation($address, $carrier_code){
+    global $host, $accessToken, $info;
+    $customerInfo = getCustomerInformation();
+    $companyInfo = getCustomerCompanyById($customerInfo['extension_attributes']["company_attributes"]["company_id"]);
+    $info['shippingCarrierInfo'] = getCarrierByCode($carrier_code);
+
+    $shippingInfo = [
+      'addressInformation' => [
+          'shipping_address' => array_merge($address, [
+              "firstname" => $customerInfo['firstname'], "lastname" => $customerInfo['lastname'],
+              "company" => $companyInfo['company_name']
+          ]),
+          'billing_address' => array_merge($address, [
+              "firstname" => $customerInfo['firstname'], "lastname" => $customerInfo['lastname'],
+              "company" => $companyInfo['company_name']
+          ]),
+          'shipping_carrier_code' => $carrier_code,
+          'shipping_method_code' => $info['shippingCarrierInfo']['method_code'],
+          'extension_attributes' => [],
+          'custom_attributes' => []
+      ]
+    ];
+
+    $info['shippingInfoResponse'] = postRequest(
+        $host . "/V1/carts/{$info['cartId']}/shipping-information",
         ['Content-Type: application/json', "Authorization: Bearer $accessToken"],
-        ['cartId' => $info['cartId'], 'address' => $address]
+        $shippingInfo
     );
 }
+
 function getShippingRates($address){
 
     global $host, $accessToken, $info;

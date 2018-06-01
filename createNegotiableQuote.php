@@ -15,7 +15,7 @@ function requestNegotiableQuote($name, $comment = null){
 function setNegotiableShippingMethod($carrier_code){
 
     global $host, $accessToken, $info;
-    $info['shippingInfo'] = putRequest(
+    $info['quoteShippingInfo'] = putRequest(
         $host . "/V1/negotiableQuote/{$info['cartId']}/shippingMethod",
         ['Content-Type: application/json', "Authorization: Bearer $accessToken"],
         ['shippingMethod' => $carrier_code]

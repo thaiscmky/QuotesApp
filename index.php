@@ -29,7 +29,7 @@ ini_set('display_errors', 1);
             height: 200px;
         }
         .table-responsive.products { font-size: 12px;}
-        #step1, #step2, #step3, #step4
+        .equote_demo
         {
             display:none;
         }
@@ -75,6 +75,11 @@ ini_set('display_errors', 1);
                     <?php include_once 'step4form.php'; ?>
                 </div>
             </div>
+
+            <div class="negotiable_quote_created card-body">
+                <pre></pre>
+            </div>
+
         </div>
     </div>
 </div>
@@ -108,12 +113,19 @@ ini_set('display_errors', 1);
         createCustomerCart();
         //Add items to quote request
         addProductsToCart();
+        //Set cart's shipping method
+        setShippingMethod();
+        //Request negotiable quote
+        requestNegotiableQuote();
+
         /**
          * PROTOTYPE UI ONLY; NOT PART OF API CALLS:
-         * Verify a SKU has been entered for the current product before adding another product to quote
-         * API call takes one product at a time
          **/
+        //Verify a SKU has been entered for the current product before adding another product to quote
+        //API call takes one product at a time
         validateAddProductToCart();
+        //Allow for skipping shipping method prior to negotiable quote creation
+        skipShipping();
 
     }
 
@@ -343,11 +355,94 @@ ini_set('display_errors', 1);
     /**
      * Start Set Shipping methods
      **/
+    function skipShipping() {
+        $('#skipshippingmethod').on('click', function(){
+            $('#step3').parents('.equote_demo').hide();
+            $('#step4').parents('.equote_demo').show();
+        });
+    }
 
+    function setShippingMethod(){
+        $('#negotiable-carriers').on('click', 'input[type="radio"]',function(){
+            $('#setshippingmethod').prop('disabled', false);
+        });
+
+        $("#step3").submit(function( event ) {
+            event.preventDefault();
+            console.log('Setting order shipping method...');
+            var formdata = $(this).serializeArray();
+            formdata.forEach(field => {
+                request[field.name] = field.value;
+            });
+
+            setStepMessage('Setting shipping information...', 'badge-success badge-warning');
+
+            $.ajax({
+                url: `./stpthree_settingshipping.php`,
+                type: 'post',
+                data: request,
+                dataType: 'json',
+                context: this
+            }).done(result => {
+                console.log('Result:');
+                console.log(result);
+                $('#step3').parents('.equote_demo').hide();
+                $('#step4').parents('.equote_demo').show();
+                $('.equote_demo span.badge').text('Ready');
+                setStepMessage('Ready', 'badge-warning badge-success');
+                $('.equote_demo #step').text('Add products to cart quote');
+                $('.equote_demo .negotiableId').text(result.cartId);
+                $('.equote_demo .negotiableName').text(request.quoteName);
+                $('.equote_demo .negotiableComment').text(request.quoteComment);
+                $('.equote_demo .negotiableProds').html(formatAddedProducts(result['itemsAdded']));
+                $('.equote_demo .negotiablePrice').text(request.quotePrice);
+                $('.equote_demo .negotiablePriceType').text(`(3) Set a proposed price for the entire quote`);
+                $('.equote_demo .negotiableShipping').text(`${result.shippingCarrierInfo.carrier_title}: ${result.shippingCarrierInfo.method_title}`);
+                $('.equote_demo .customerId').text(result.customerId);
+                if(address) {
+                    $('.equote_demo .customerShipping').html(
+                        `<br>${address.street.join(',')}<br> ${address.city}, ${address.region_code} ${address.postcode} - ${address.country_id}`
+                    );
+
+                }
+                $('#cartquote_payload pre').text(JSON.stringify(result.shippingInfoResponse, null, "\t"));
+
+            }).catch(err => console.log(err.responseText));
+        });
+    }
     /**
      * End Set Shipping methods
      **/
-    <!-- TODO -->
+
+    /**
+     * Start of Request Negotiable Quote methods
+     **/
+    function requestNegotiableQuote(){
+        $("#step4").submit(function( event ) {
+            event.preventDefault();
+            console.log('Creating Negotiable Quote...');
+            setStepMessage('Adding products to cart...', 'badge-success badge-warning');
+
+            $.ajax({
+                url: `./stpfour_requestnquote.php`,
+                type: 'post',
+                data: request,
+                dataType: 'json',
+                context: this
+            }).done(result => {
+                console.log('Created');
+                $('#step4').parents('.equote_demo').hide();
+                $('.equote_demo span.badge').text('Ready');
+                setStepMessage('Ready', 'badge-warning badge-success');
+                $('.negotiable_quote_created').prepend('<h2>Negotiable Quote Created</h2>');
+
+            }).catch(err => console.log(err.responseText));
+        });
+    }
+    /**
+     * End of Request Negotiable Quote methods
+     **/
+
     /**
      * Start Update Negotiable Quote methods
      **/
