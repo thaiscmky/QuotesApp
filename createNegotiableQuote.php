@@ -27,7 +27,7 @@ function setNegotiablePrice($value, $type = 3){
     global $host, $accessToken, $info;
 
     $info['setQuotePrice'] = putRequest(
-        $host . "/V1/negotiable-carts/{$info['cartId']}/shipping-information",
+        $host . "/V1/negotiableQuote/{$info['cartId']}",
         ['Content-Type: application/json', "Authorization: Bearer $accessToken"],
         ['quote' => [
             'id' => $info['cartId'],
