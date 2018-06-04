@@ -7,4 +7,4 @@ requestNegotiableQuote($request['quoteName'], isset($request['quoteComment']) ? 
 setNegotiablePrice($request['quotePrice']);
 setNegotiableShippingMethod($info['shippingCarrierInfo']['carrier_code']);
 
-echo json_encode($negotiable_quote);
+echo json_encode(getNegotiableQuoteInfo());

@@ -37,3 +37,16 @@ function setNegotiablePrice($value, $type = 3){
         ]]
     );
 }
+
+function getNegotiableQuoteInfo() {
+
+    global $host, $accessToken, $info;
+
+    $negotiable_quote = getRequest(
+        $host . "/V1/carts/{$info['cartId']}",
+        ['Content-Type: application/json', "Authorization: Bearer $accessToken"]
+    );
+
+    $negotiable_quote = json_decode(json_encode($negotiable_quote), true);
+    return $negotiable_quote;
+}

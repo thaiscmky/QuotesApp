@@ -331,7 +331,7 @@ ini_set('display_errors', 1);
                 $('#step3').parents('.equote_demo').show();
                 $('.equote_demo span.badge').text('Ready');
                 setStepMessage('Ready', 'badge-warning badge-success');
-                $('.equote_demo #step').text('Add products to cart quote');
+                $('.equote_demo #step').text('Set shipping information');
                 $('.equote_demo .negotiableId').text(result.cartId);
                 $('.equote_demo .negotiableProds').html(formatAddedProducts(result['itemsAdded']));
                 $('.equote_demo .negotiablePrice').text(request.quotePrice);
@@ -357,6 +357,7 @@ ini_set('display_errors', 1);
      **/
     function skipShipping() {
         $('#skipshippingmethod').on('click', function(){
+            $('.equote_demo #step').text('Request Negotiable Quote');
             $('#step3').parents('.equote_demo').hide();
             $('#step4').parents('.equote_demo').show();
         });
@@ -390,7 +391,7 @@ ini_set('display_errors', 1);
                 $('#step4').parents('.equote_demo').show();
                 $('.equote_demo span.badge').text('Ready');
                 setStepMessage('Ready', 'badge-warning badge-success');
-                $('.equote_demo #step').text('Add products to cart quote');
+                $('.equote_demo #step').text('Request Negotiable Quote');
                 $('.equote_demo .negotiableId').text(result.cartId);
                 $('.equote_demo .negotiableName').text(request.quoteName);
                 $('.equote_demo .negotiableComment').text(request.quoteComment);
@@ -421,7 +422,7 @@ ini_set('display_errors', 1);
         $("#step4").submit(function( event ) {
             event.preventDefault();
             console.log('Creating Negotiable Quote...');
-            setStepMessage('Adding products to cart...', 'badge-success badge-warning');
+            setStepMessage('Requesting negotiable quote...', 'badge-success badge-warning');
 
             $.ajax({
                 url: `./stpfour_requestnquote.php`,
@@ -435,6 +436,8 @@ ini_set('display_errors', 1);
                 $('.equote_demo span.badge').text('Ready');
                 setStepMessage('Ready', 'badge-warning badge-success');
                 $('.negotiable_quote_created').prepend('<h2>Negotiable Quote Created</h2>');
+                $('.negotiable_quote_created pre').text(JSON.stringify(result, null, "\t"));
+
 
             }).catch(err => console.log(err.responseText));
         });

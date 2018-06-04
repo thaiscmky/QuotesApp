@@ -36,6 +36,15 @@
             </div>
         </div>
     </fieldset>
+    <fieldset id="misc" class="form-group">
+        <h5 class="card-title">Additional Information (Optional)</h5>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="quoteComment">Quote Comments</label>
+                <textarea class="form-control" id="quoteComment" name="quoteComment" rows="3"></textarea>
+            </div>
+        </div>
+    </fieldset>
     <hr>
-    <button type="submit" class="btn btn-primary" id="createnegotiablequote">Add Products to Order</button>
+    <button type="submit" class="btn btn-primary" id="addproductstocart">Add Products to Order</button>
 </form>
