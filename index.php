@@ -98,6 +98,7 @@ ini_set('display_errors', 1);
 
     let address = false;
     let request = {};
+    let customProducts = {};
     let requestResults = {};
 
     $(document).ready(function () {
@@ -236,7 +237,7 @@ ini_set('display_errors', 1);
         html += `<div class="form-group col d-flex align-items-center mt-4">
                     <button type="button" class="btn btn-sm" class="addproduct" id="addproduct-${id + 1}">Add another product</button>
                 </div>`;
-        $("#products").append(html);
+        $("#products").append(`<div class="form-row">${html}</div>`);
     }
 
     function formatShippingRate(carriers){
@@ -328,22 +329,10 @@ ini_set('display_errors', 1);
                 console.log('Result:');
                 console.log(result);
                 $('#step2').parents('.equote_demo').hide();
-                $('#step3').parents('.equote_demo').show();
                 $('.equote_demo span.badge').text('Ready');
                 setStepMessage('Ready', 'badge-warning badge-success');
-                $('.equote_demo #step').text('Set shipping information');
-                $('.equote_demo .negotiableId').text(result.cartId);
-                $('.equote_demo .negotiableProds').html(formatAddedProducts(result['itemsAdded']));
-                $('.equote_demo .negotiablePrice').text(request.quotePrice);
-                $('.equote_demo .negotiablePriceType').text(`(3) Set a proposed price for the entire quote`);
-                $('.equote_demo .customerId').text(result.customerId);
-                if(address) {
-                    $('.equote_demo .customerShipping').html(
-                        `<br>${address.street.join(',')}<br> ${address.city}, ${address.region_code} ${address.postcode} - ${address.country_id}`
-                    );
-                    if(typeof result['shippingCarriers'] !== 'undefined' && result['shippingCarriers'] !== null)
-                        $('#negotiable-carriers').html(formatShippingRate(result['shippingCarriers']));
-                }
+                //Checks if there are non-existing products before the next step
+                createCustomProducts(result);
 
             }).catch(err => console.log(err.responseText));
         });
@@ -353,8 +342,68 @@ ini_set('display_errors', 1);
      **/
 
     /**
+     * Start of Create Custom Product methods
+     **/
+    function createCustomProducts(result){
+        $.each(result.itemsAdded, (key, product) => {
+            if(product.item_id === null || typeof product.item_id === 'undefined'){
+                customProducts[key] = {};
+                delete result.itemsAdded[key];
+            }
+        });
+
+        /**
+         * It is assumed that a product of SKU quote-product-custom, with a weight of 1.0 and price of 0 exists in Magento for the purpose of quoting for non-existing SKUs
+         */
+
+        console.log(result.itemsAdded);
+        console.log(customProducts);
+        //goToShippingStep(result);
+    }
+
+    function requestCustomProductInfo(){
+
+    }
+
+    function createCustomProductField(id){
+        let html = '';
+        html += `<div class="form-group col">
+                    <label for="productsku-${id}">Product SKU</label>
+                    <input type="text" class="form-control" id="productsku-${id}" name="productsku" required>
+                </div>`;
+        html += `<div class="form-group col-2">
+                    <label for="productqty">Quantity</label>
+                    <input type="text" class="form-control" id="productqty-${id}" name="productqty" value="1" required>
+                </div>`;
+        html += `<div class="form-group col d-flex align-items-center mt-4">
+                    <button type="button" class="btn btn-sm" class="addproduct" id="addproduct-${id + 1}">Add another product</button>
+                </div>`;
+        $("#products").append(`<div class="form-row">${html}</div>`);
+    }
+
+    /**
+     * End of Create Custom Product methods
+     **/
+
+    /**
      * Start Set Shipping methods
      **/
+    function goToShippingStep(result){
+        $('#step3').parents('.equote_demo').show();
+        $('.equote_demo #step').text('Set shipping information');
+        $('.equote_demo .negotiableId').text(result.cartId);
+        $('.equote_demo .negotiableProds').html(formatAddedProducts(result['itemsAdded']));
+        $('.equote_demo .negotiablePrice').text(request.quotePrice);
+        $('.equote_demo .negotiablePriceType').text(`(3) Set a proposed price for the entire quote`);
+        $('.equote_demo .customerId').text(result.customerId);
+        if(address) {
+            $('.equote_demo .customerShipping').html(
+                `<br>${address.street.join(',')}<br> ${address.city}, ${address.region_code} ${address.postcode} - ${address.country_id}`
+            );
+            if(typeof result['shippingCarriers'] !== 'undefined' && result['shippingCarriers'] !== null)
+                $('#negotiable-carriers').html(formatShippingRate(result['shippingCarriers']));
+        }
+    }
     function skipShipping() {
         $('#skipshippingmethod').on('click', function(){
             $('.equote_demo #step').text('Request Negotiable Quote');
